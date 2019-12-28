@@ -25,7 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\core\AlphaDev.Pager\AlphaDev.Pager.csproj" />
+    <ProjectReference Include="..\..\..\core\AlphaDev.Paging\AlphaDev.Paging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
 </Project>
