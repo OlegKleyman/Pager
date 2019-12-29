@@ -28,8 +28,4 @@
     <ProjectReference Include="..\..\..\core\AlphaDev.Paging\AlphaDev.Paging.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
 </Project>

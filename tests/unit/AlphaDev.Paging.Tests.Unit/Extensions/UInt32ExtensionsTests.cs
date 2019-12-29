@@ -3,7 +3,7 @@ using AlphaDev.Paging.Extensions;
 using FluentAssertions;
 using Xunit;
 
-namespace AlphaDev.Paging.Tests.Unit
+namespace AlphaDev.Paging.Tests.Unit.Extensions
 {
     public class UInt32ExtensionsTests
     {

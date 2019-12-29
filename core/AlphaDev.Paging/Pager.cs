@@ -12,6 +12,7 @@ namespace AlphaDev.Paging
         public Pager(ICollection<T> items, Pages pages)
         {
             if (!items.Any()) throw new ArgumentException("Value cannot be an empty collection.", nameof(items));
+            
             _items = items;
 
             Pages = pages;
