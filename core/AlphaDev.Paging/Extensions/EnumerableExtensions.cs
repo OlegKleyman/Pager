@@ -16,7 +16,7 @@ namespace AlphaDev.Paging.Extensions
         {
             var pageItems = items.ToArray();
 
-            var totalPages = (uint)Math.Ceiling((decimal)await totalItems() / settings.ItemsPerPage);
+            var totalPages = (uint) Math.Ceiling((decimal) await totalItems() / settings.ItemsPerPage);
             if (totalPages != currentPage && pageItems.LongLength < settings.ItemsPerPage)
             {
                 throw new InvalidOperationException(
