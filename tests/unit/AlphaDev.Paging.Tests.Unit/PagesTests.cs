@@ -136,7 +136,7 @@ namespace AlphaDev.Paging.Tests.Unit
         [Fact]
         public void CreateWithSettingsSetsTheNextPagesThatFollowCurrentPageUpToTheNextPageLength()
         {
-            Pages.Create(17, 200, new PagesSettings(ushort.MaxValue, 4))
+            Pages.Create(17, 200, new PagesSettings(ushort.MaxValue, 4, 1))
                  .NextPages.Should()
                  .BeEquivalentTo(Enumerable.Range(18, 4))
                  .And.BeInAscendingOrder();
@@ -145,13 +145,15 @@ namespace AlphaDev.Paging.Tests.Unit
         [Fact]
         public void CreateWithSettingsSetsTheNextPagesToEmptyArrayWhenCurrentPageIsLastPage()
         {
-            Pages.Create(200, 200, new PagesSettings(ushort.MaxValue, ushort.MaxValue)).NextPages.Should().BeEmpty();
+            Pages.Create(200, 200, new PagesSettings(ushort.MaxValue, ushort.MaxValue, 1))
+                 .NextPages.Should()
+                 .BeEmpty();
         }
 
         [Fact]
         public void CreateWithSettingsSetsThePreviousPagesBeforeCurrentPageUpToThePreviousPageLength()
         {
-            Pages.Create(15, 20, new PagesSettings(4, ushort.MaxValue))
+            Pages.Create(15, 20, new PagesSettings(4, ushort.MaxValue, 1))
                  .PreviousPages.Should()
                  .BeEquivalentTo(Enumerable.Range(11, 4))
                  .And.BeInAscendingOrder();
@@ -160,13 +162,13 @@ namespace AlphaDev.Paging.Tests.Unit
         [Fact]
         public void CreateWithSettingsSetsThePreviousPagesToEmptyArrayWhenCurrentPageIsNone()
         {
-            Pages.Create(1, 20, new PagesSettings(ushort.MaxValue, ushort.MaxValue)).PreviousPages.Should().BeEmpty();
+            Pages.Create(1, 20, new PagesSettings(ushort.MaxValue, ushort.MaxValue,1)).PreviousPages.Should().BeEmpty();
         }
 
         [Fact]
         public void CreateWithSettingsSetsTheNextAuxiliaryPageToTheFirstNoneVisiblePageWhenItIsNotPassedTheLastPage()
         {
-            Pages.Create(1, 20, new PagesSettings(ushort.MaxValue, 7))
+            Pages.Create(1, 20, new PagesSettings(ushort.MaxValue, 7, 1))
                  .NextAuxiliaryPage.Should()
                  .HaveSome()
                  .Which.Should()
@@ -176,7 +178,7 @@ namespace AlphaDev.Paging.Tests.Unit
         [Fact]
         public void CreateWithSettingsSetsTheNextAuxiliaryPageToNoneWhenItIsPassedTheLastNextVisiblePage()
         {
-            Pages.Create(1, 20, new PagesSettings(ushort.MaxValue, 19))
+            Pages.Create(1, 20, new PagesSettings(ushort.MaxValue, 19,1))
                  .NextAuxiliaryPage.Should()
                  .BeNone();
         }
