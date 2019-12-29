@@ -2,20 +2,25 @@
 using System.Linq;
 using AlphaDev.Paging.Extensions;
 using Optional;
+using Optional.Collections;
 
 namespace AlphaDev.Paging
 {
     public class Pages
     {
-        private Pages(uint currentPage, uint lastPage)
+        private Pages(uint currentPage, uint lastPage, PagesSettings settings)
         {
             First = 1;
             Current = currentPage;
             Last = lastPage;
             NextPage = Current.SomeWhen(u => u != lastPage).Map(u => u + 1);
-            PreviousPages = 1u.RangeTo(Current).Take((int) (Current - 1)).ToArray();
-            NextPages = lastPage.RangeFrom(Current).Skip(1).ToArray();
+
+            PreviousPages = 1u.RangeTo(Current).SkipLast(1).TakeLast(settings.PreviousPagesLength).ToArray();
+            NextPages = lastPage.RangeFrom(Current).Skip(1).Take(settings.NextPagesLength).ToArray();
+            NextAuxiliaryPage = NextPages.LastOrNone().Filter(u => u + 1 <= lastPage);
         }
+
+        public Option<uint> NextAuxiliaryPage { get; }
 
         public uint[] NextPages { get; }
 
@@ -29,7 +34,10 @@ namespace AlphaDev.Paging
 
         public Option<uint> NextPage { get; }
 
-        public static Pages Create(uint currentPage, uint lastPage)
+        public static Pages Create(uint currentPage, uint lastPage) => Create(currentPage, lastPage,
+            PagesSettings.Default);
+
+        public static Pages Create(uint currentPage, uint lastPage, PagesSettings settings)
         {
             if (currentPage == 0) throw new ArgumentException($"Invalid value: {currentPage}", nameof(currentPage));
 
@@ -40,7 +48,7 @@ namespace AlphaDev.Paging
                     nameof(lastPage), nameof(currentPage));
             }
 
-            return new Pages(currentPage, lastPage);
+            return new Pages(currentPage, lastPage, settings);
         }
     }
 }
