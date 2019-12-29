@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AlphaDev.Paging.Support;
 
 namespace AlphaDev.Paging.Extensions
@@ -13,5 +14,8 @@ namespace AlphaDev.Paging.Extensions
         public static IEnumerable<uint> RangeTo(this uint start, uint end) => EnumerableSupport.RangeTo(start, end);
 
         public static IEnumerable<uint> RangeFrom(this uint end, uint start) => EnumerableSupport.RangeTo(start, end);
+
+        public static IEnumerable<int> ToEnumerable(this Range range) =>
+            Enumerable.Range(range.Start.Value, range.End.Value - range.Start.Value);
     }
 }

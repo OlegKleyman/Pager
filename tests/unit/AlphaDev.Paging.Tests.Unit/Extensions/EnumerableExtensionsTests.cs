@@ -71,6 +71,59 @@ namespace AlphaDev.Paging.Tests.Unit.Extensions
         }
 
         [Fact]
+        public async Task ToPagerTaskWithSettingsReturnsPagerBasedOnSettings()
+        {
+            var items = Enumerable.Range(1, 10).ToArray();
+            var pager = await items.ToPager(5, 10, () => Task.FromResult(101), new PagesSettings(2, 4));
+            pager.Pages.PreviousPages.Should().BeEquivalentTo(new[] { 4, 3 });
+            pager.Pages.NextPages.Should().BeEquivalentTo(new[] { 6, 7, 8, 9 });
+        }
+
+        [Fact]
+        public async Task ToPagerTaskWithSettingsReturnsPagerItemsInTheSameOrder()
+        {
+            var items = Enumerable.Range(1, 10).ToArray();
+            var pager = await items.ToPager(5, 10, () => Task.FromResult(101),
+                PagesSettings.Default);
+            pager.Should().BeEquivalentTo(items, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public async Task ToPagerTaskWithSettingsReturnsPagerWithCurrentPage()
+        {
+            var pager = await new object[10].ToPager(5, 10, () => Task.FromResult(101),
+                PagesSettings.Default);
+            pager.Pages.Current.Should().Be(5);
+        }
+
+        [Fact]
+        public async Task ToPagerTaskWithSettingsReturnsPagerWithLastPageBasedOnTotalItemsAndItemsPerPage()
+        {
+            var pager = await new object[10].ToPager(5, 10, () => Task.FromResult(101),
+                PagesSettings.Default);
+            pager.Pages.Last.Should().Be(11);
+        }
+
+        [Fact]
+        public void ToPagerTaskWithSettingsThrowsArgumentExceptionWhenItemsPerPageIsZero()
+        {
+            Func<Task> toPager = () => new object[1].ToPager(default, 0, () => Task.FromResult(1),
+                PagesSettings.Default);
+            toPager.Should().Throw<ArgumentException>().WithMessage("Cannot be '0'. (Parameter 'itemsPerPage')");
+        }
+
+        [Fact]
+        public void ToPagerTaskWithSettingsThrowsExceptionWhenItemsContainsLessThanItemsPerPageAndItIsNotTheLastPage()
+        {
+            Func<Task> toPager = () => new object[1].ToPager(1, 10, () => Task.FromResult(100),
+                PagesSettings.Default);
+            toPager.Should()
+                   .Throw<InvalidOperationException>()
+                   .WithMessage(
+                       "Invalid amount of items. Expected 10, but was 1. Only the last page may contain less than 10 items.");
+        }
+
+        [Fact]
         public void ToPagerThrowsArgumentExceptionWhenItemsPerPageIsZero()
         {
             Action toPager = () => new object[1].ToPager(default, 0, () => 1);
@@ -81,6 +134,56 @@ namespace AlphaDev.Paging.Tests.Unit.Extensions
         public void ToPagerThrowsExceptionWhenItemsContainsLessThanItemsPerPageAndItIsNotTheLastPage()
         {
             Action toPager = () => new object[1].ToPager(1, 10, () => 100);
+            toPager.Should()
+                   .Throw<InvalidOperationException>()
+                   .WithMessage(
+                       "Invalid amount of items. Expected 10, but was 1. Only the last page may contain less than 10 items.");
+        }
+
+        [Fact]
+        public void ToPagerWithSettingsReturnsPagerBasedOnSettings()
+        {
+            var items = Enumerable.Range(1, 10).ToArray();
+            var pager = items.ToPager(5, 10, () => 101, new PagesSettings(2, 4));
+            pager.Pages.PreviousPages.Should().BeEquivalentTo(new[] { 4, 3 });
+            pager.Pages.NextPages.Should().BeEquivalentTo(new[] { 6, 7, 8, 9 });
+        }
+
+        [Fact]
+        public void ToPagerWithSettingsReturnsPagerItemsInTheSameOrder()
+        {
+            var items = Enumerable.Range(1, 10).ToArray();
+            var pager = items.ToPager(5, 10, () => 101, PagesSettings.Default);
+            pager.Should().BeEquivalentTo(items, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public void ToPagerWithSettingsReturnsPagerWithCurrentPage()
+        {
+            var pager = new object[10].ToPager(5, 10, () => 101, PagesSettings.Default);
+            pager.Pages.Current.Should().Be(5);
+        }
+
+        [Fact]
+        public void ToPagerWithSettingsReturnsPagerWithLastPageBasedOnTotalItemsAndItemsPerPage()
+        {
+            var pager = new object[10].ToPager(5, 10, () => 101, PagesSettings.Default);
+            pager.Pages.Last.Should().Be(11);
+        }
+
+        [Fact]
+        public void ToPagerWithSettingsThrowsArgumentExceptionWhenItemsPerPageIsZero()
+        {
+            Action toPager = () =>
+                new object[1].ToPager(default, 0, () => 1, PagesSettings.Default);
+            toPager.Should().Throw<ArgumentException>().WithMessage("Cannot be '0'. (Parameter 'itemsPerPage')");
+        }
+
+        [Fact]
+        public void ToPagerWithSettingsThrowsExceptionWhenItemsContainsLessThanItemsPerPageAndItIsNotTheLastPage()
+        {
+            Action toPager = () =>
+                new object[1].ToPager(1, 10, () => 100, PagesSettings.Default);
             toPager.Should()
                    .Throw<InvalidOperationException>()
                    .WithMessage(
