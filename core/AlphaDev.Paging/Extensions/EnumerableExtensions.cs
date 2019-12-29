@@ -7,11 +7,11 @@ namespace AlphaDev.Paging.Extensions
 {
     public static class EnumerableExtensions
     {
-        public static Task<Pager<T>> ToPager<T>(this IEnumerable<T> items, uint currentPage,
-            Func<Task<int>> totalItems) => ToPager(items, currentPage, totalItems,
+        public static Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, uint currentPage,
+            Func<Task<int>> totalItems) => ToPagerAsync(items, currentPage, totalItems,
             PagesSettings.Default);
 
-        public static async Task<Pager<T>> ToPager<T>(this IEnumerable<T> items, uint currentPage,
+        public static async Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, uint currentPage,
             Func<Task<int>> totalItems, PagesSettings settings)
         {
             var pageItems = items.ToArray();
@@ -30,7 +30,7 @@ namespace AlphaDev.Paging.Extensions
         public static Pager<T> ToPager<T>(this IEnumerable<T> items, uint currentPage,
             Func<int> totalItems)
         {
-            return ToPager(items, currentPage, () => Task.FromResult(totalItems()))
+            return ToPagerAsync(items, currentPage, () => Task.FromResult(totalItems()))
                    .GetAwaiter()
                    .GetResult();
         }
@@ -38,7 +38,7 @@ namespace AlphaDev.Paging.Extensions
         public static Pager<T> ToPager<T>(this IEnumerable<T> items, uint currentPage,
             Func<int> totalItems, PagesSettings settings)
         {
-            return ToPager(items, currentPage, () => Task.FromResult(totalItems()), settings)
+            return ToPagerAsync(items, currentPage, () => Task.FromResult(totalItems()), settings)
                    .GetAwaiter()
                    .GetResult();
         }
