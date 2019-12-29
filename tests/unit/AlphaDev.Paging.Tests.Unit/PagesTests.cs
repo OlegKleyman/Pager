@@ -51,6 +51,14 @@ namespace AlphaDev.Paging.Tests.Unit
         }
 
         [Fact]
+        public void CreateSetsTheNextPagesToEmptyArrayWhenCurrentPageIsLastPage()
+        {
+            Pages.Create(200, 200)
+                 .NextPages.Should()
+                 .BeEmpty();
+        }
+
+        [Fact]
         public void CreateSetsThePreviousPagesBeforeCurrentPage()
         {
             Pages.Create(15, 20)
