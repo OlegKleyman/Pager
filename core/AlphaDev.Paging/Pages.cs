@@ -13,9 +13,7 @@ namespace AlphaDev.Paging
             Current = currentPage;
             Last = lastPage;
             NextPage = Current.SomeWhen(u => u != lastPage).Map(u => u + 1);
-            PreviousPages = Current.SomeWhen(u => u > 1, Array.Empty<uint>)
-                                   .Map(u => 1u.RangeTo(u - 1).ToArray())
-                                   .ValueOrException();
+            PreviousPages = 1u.RangeTo(Current).Take((int) (Current - 1)).ToArray();
             NextPages = lastPage.RangeFrom(lastPage.MinOf(Current + 1)).ToArray();
         }
 
