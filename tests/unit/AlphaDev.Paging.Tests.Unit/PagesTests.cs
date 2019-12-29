@@ -9,6 +9,18 @@ namespace AlphaDev.Paging.Tests.Unit
     public class PagesTests
     {
         [Fact]
+        public void CreateReturnsNextPageNoneWhenCurrentPageIsLastPage()
+        {
+            Pages.Create(1, 1).NextPage.Should().BeNone();
+        }
+
+        [Fact]
+        public void CreateReturnsNextPageWhenCurrentPageIsNotLastPage()
+        {
+            Pages.Create(1, 2).NextPage.Should().HaveSome().Which.Should().Be(2);
+        }
+
+        [Fact]
         public void CreateReturnsPagesWithCurrentPageWhenItIsLessThanOrEqualToLastPage()
         {
             var pages = Pages.Create(2, 10);
@@ -48,6 +60,12 @@ namespace AlphaDev.Paging.Tests.Unit
         }
 
         [Fact]
+        public void CreateSetsThePreviousPagesToEmptyArrayWhenCurrentPageIsNone()
+        {
+            Pages.Create(1, 20).PreviousPages.Should().BeEmpty();
+        }
+
+        [Fact]
         public void CreateThrowsArgumentExceptionWhenCurrentPageIsZero()
         {
             Action create = () => Pages.Create(0, 1);
@@ -64,18 +82,6 @@ namespace AlphaDev.Paging.Tests.Unit
                   .Throw<ArgumentsException>()
                   .WithMessage(
                       "Invalid last page: 1 It is less than than the current page: 2 (Parameters 'lastPage', 'currentPage')");
-        }
-
-        [Fact]
-        public void NextPageReturnsNoneWhenCurrentPageIsLastPage()
-        {
-            Pages.Create(1, 1).NextPage.Should().BeNone();
-        }
-
-        [Fact]
-        public void NextPageReturnsNoneWhenCurrentPageIsNotLastPage()
-        {
-            Pages.Create(1, 2).NextPage.Should().HaveSome().Which.Should().Be(2);
         }
     }
 }
