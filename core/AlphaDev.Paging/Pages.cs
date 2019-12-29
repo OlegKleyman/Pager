@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using AlphaDev.Paging.Extensions;
-using AlphaDev.Paging.Support;
 using Optional;
 
 namespace AlphaDev.Paging
@@ -25,6 +23,12 @@ namespace AlphaDev.Paging
 
         public uint Current { get; }
 
+        public uint First { get; }
+
+        public uint Last { get; }
+
+        public Option<uint> NextPage { get; }
+
         public static Pages Create(uint currentPage, uint lastPage)
         {
             if (currentPage == 0) throw new ArgumentException($"Invalid value: {currentPage}", nameof(currentPage));
@@ -38,11 +42,5 @@ namespace AlphaDev.Paging
 
             return new Pages(currentPage, lastPage);
         }
-
-        public uint First { get; }
-
-        public uint Last { get; }
-
-        public Option<uint> NextPage { get; }
     }
 }

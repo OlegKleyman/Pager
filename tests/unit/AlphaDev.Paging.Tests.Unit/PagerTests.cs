@@ -10,14 +10,8 @@ namespace AlphaDev.Paging.Tests.Unit
 {
     public class PagerTests
     {
-        [Fact]
-        public void ConstructorThrowsArgumentExceptionWhenCollectionIsEmpty()
-        {
-            Action constructor = () => new Pager<string>(Array.Empty<string>(), Pages.Create(1, 1));
-            constructor.Should()
-                  .Throw<ArgumentException>()
-                  .WithMessage("Value cannot be an empty collection. (Parameter 'items')");
-        }
+        [NotNull]
+        private static Pager<T> GetPager<T>(ICollection<T> items, Pages pages) => new Pager<T>(items, pages);
 
         [Fact]
         public void ConstructorInitializesPagerWithPages()
@@ -28,19 +22,12 @@ namespace AlphaDev.Paging.Tests.Unit
         }
 
         [Fact]
-        public void GetEnumeratorOfTGetsEnumeratorOfEnumerable()
+        public void ConstructorThrowsArgumentExceptionWhenCollectionIsEmpty()
         {
-            var testValues = Enumerable.Range(0, 10).ToArray();
-            var pager = GetPager(testValues, Pages.Create(1, 1));
-
-            using var enumerator = pager.GetEnumerator();
-            foreach (var testValue in testValues)
-            {
-                enumerator.MoveNext().Should().BeTrue();
-                enumerator.Current.Should().Be(testValue);
-            }
-
-            enumerator.MoveNext().Should().BeFalse();
+            Action constructor = () => new Pager<string>(Array.Empty<string>(), Pages.Create(1, 1));
+            constructor.Should()
+                       .Throw<ArgumentException>()
+                       .WithMessage("Value cannot be an empty collection. (Parameter 'items')");
         }
 
         [Fact]
@@ -59,7 +46,20 @@ namespace AlphaDev.Paging.Tests.Unit
             enumerator.MoveNext().Should().BeFalse();
         }
 
-        [NotNull]
-        private static Pager<T> GetPager<T>(ICollection<T> items, Pages pages) => new Pager<T>(items, pages);
+        [Fact]
+        public void GetEnumeratorOfTGetsEnumeratorOfEnumerable()
+        {
+            var testValues = Enumerable.Range(0, 10).ToArray();
+            var pager = GetPager(testValues, Pages.Create(1, 1));
+
+            using var enumerator = pager.GetEnumerator();
+            foreach (var testValue in testValues)
+            {
+                enumerator.MoveNext().Should().BeTrue();
+                enumerator.Current.Should().Be(testValue);
+            }
+
+            enumerator.MoveNext().Should().BeFalse();
+        }
     }
 }

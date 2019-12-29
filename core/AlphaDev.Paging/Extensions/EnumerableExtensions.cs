@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Optional;
 
 namespace AlphaDev.Paging.Extensions
 {
@@ -29,7 +28,8 @@ namespace AlphaDev.Paging.Extensions
             return new Pager<T>(pageItems, pages);
         }
 
-        public static Pager<T> ToPager<T>(this IEnumerable<T> items, uint currentPage, uint itemsPerPage, Func<int> totalItems)
+        public static Pager<T> ToPager<T>(this IEnumerable<T> items, uint currentPage, uint itemsPerPage,
+            Func<int> totalItems)
         {
             return ToPager(items, currentPage, itemsPerPage, () => Task.FromResult(totalItems()))
                    .GetAwaiter()

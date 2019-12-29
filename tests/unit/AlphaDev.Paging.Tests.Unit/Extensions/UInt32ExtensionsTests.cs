@@ -26,15 +26,15 @@ namespace AlphaDev.Paging.Tests.Unit.Extensions
         }
 
         [Fact]
-        public void RangeToReturnsEnumerableOfUInt32StartingFromTheStartArgumentAndEndingAtTheEndArgument()
-        {
-            1u.RangeTo(100).Should().BeEquivalentTo(Enumerable.Range(1, 100)).And.BeInAscendingOrder();
-        }
-
-        [Fact]
         public void RangeFromReturnsEnumerableOfUInt32StartingFromTheStartArgumentAndEndingAtTheEndArgument()
         {
             100u.RangeFrom(1).Should().BeEquivalentTo(Enumerable.Range(1, 100)).And.BeInAscendingOrder();
+        }
+
+        [Fact]
+        public void RangeToReturnsEnumerableOfUInt32StartingFromTheStartArgumentAndEndingAtTheEndArgument()
+        {
+            1u.RangeTo(100).Should().BeEquivalentTo(Enumerable.Range(1, 100)).And.BeInAscendingOrder();
         }
     }
 }
