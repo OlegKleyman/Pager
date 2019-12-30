@@ -12,7 +12,7 @@ namespace AlphaDev.Paging
                 new PagesSettings(ushort.MaxValue, ushort.MaxValue, 10));
         }
 
-        public PagesSettings(ushort previousPagesLength, ushort nextPagesLength, uint itemsPerPage)
+        public PagesSettings(ushort previousPagesLength, ushort nextPagesLength, int itemsPerPage)
         {
             if (itemsPerPage == 0) throw new ArgumentException("Cannot be '0'.", nameof(itemsPerPage));
 
@@ -25,7 +25,7 @@ namespace AlphaDev.Paging
 
         public ushort NextPagesLength { get; }
 
-        public uint ItemsPerPage { get; }
+        public int ItemsPerPage { get; }
 
         public static PagesSettings Default => Settings.Value;
     }

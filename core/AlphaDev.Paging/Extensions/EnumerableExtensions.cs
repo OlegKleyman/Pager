@@ -7,16 +7,16 @@ namespace AlphaDev.Paging.Extensions
 {
     public static class EnumerableExtensions
     {
-        public static Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, uint currentPage,
+        public static Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, int currentPage,
             Func<Task<int>> totalItems) => ToPagerAsync(items, currentPage, totalItems,
             PagesSettings.Default);
 
-        public static async Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, uint currentPage,
+        public static async Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, int currentPage,
             Func<Task<int>> totalItems, PagesSettings settings)
         {
             var pageItems = items.ToArray();
 
-            var totalPages = (uint) Math.Ceiling((decimal) await totalItems() / settings.ItemsPerPage);
+            var totalPages = (int) Math.Ceiling((decimal) await totalItems() / settings.ItemsPerPage);
             if (totalPages != currentPage && pageItems.LongLength < settings.ItemsPerPage)
             {
                 throw new InvalidOperationException(
@@ -27,7 +27,7 @@ namespace AlphaDev.Paging.Extensions
             return new Pager<T>(pageItems, pages);
         }
 
-        public static Pager<T> ToPager<T>(this IEnumerable<T> items, uint currentPage,
+        public static Pager<T> ToPager<T>(this IEnumerable<T> items, int currentPage,
             Func<int> totalItems)
         {
             return ToPagerAsync(items, currentPage, () => Task.FromResult(totalItems()))
@@ -35,7 +35,7 @@ namespace AlphaDev.Paging.Extensions
                    .GetResult();
         }
 
-        public static Pager<T> ToPager<T>(this IEnumerable<T> items, uint currentPage,
+        public static Pager<T> ToPager<T>(this IEnumerable<T> items, int currentPage,
             Func<int> totalItems, PagesSettings settings)
         {
             return ToPagerAsync(items, currentPage, () => Task.FromResult(totalItems()), settings)
