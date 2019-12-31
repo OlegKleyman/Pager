@@ -8,38 +8,38 @@ namespace AlphaDev.Paging
 {
     public class Pages
     {
-        private Pages(uint currentPage, uint lastPage, PagesSettings settings)
+        private Pages(in int currentPage, in int lastPage, PagesSettings settings)
         {
             First = 1;
             Current = currentPage;
             Last = lastPage;
-            NextPage = Current.SomeWhen(u => u != lastPage).Map(u => u + 1);
+            NextPage = Current.SomeWhen(u => u != Last).Map(u => u + 1);
 
-            PreviousPages = 1u.RangeTo(Current).SkipLast(1).TakeLast(settings.PreviousPagesLength).ToArray();
-            NextPages = lastPage.RangeFrom(Current).Skip(1).Take(settings.NextPagesLength).ToArray();
-            NextAuxiliaryPage = NextPages.LastOrNone().Filter(u => u + 1 <= lastPage);
+            PreviousPages = (1..Current).ToEnumerable().SkipLast(1).TakeLast(settings.PreviousPagesLength).ToArray();
+            NextPages = (Current..lastPage).ToEnumerable().Skip(1).Take(settings.NextPagesLength).ToArray();
+            NextAuxiliaryPage = NextPages.LastOrNone().Filter(u => u + 1 <= Last);
         }
 
-        public Option<uint> NextAuxiliaryPage { get; }
+        public Option<int> NextAuxiliaryPage { get; }
 
-        public uint[] NextPages { get; }
+        public int[] NextPages { get; }
 
-        public uint[] PreviousPages { get; }
+        public int[] PreviousPages { get; }
 
-        public uint Current { get; }
+        public int Current { get; }
 
-        public uint First { get; }
+        public int First { get; }
 
-        public uint Last { get; }
+        public int Last { get; }
 
-        public Option<uint> NextPage { get; }
+        public Option<int> NextPage { get; }
 
-        public static Pages Create(uint currentPage, uint lastPage) => Create(currentPage, lastPage,
+        public static Pages Create(in int currentPage, in int lastPage) => Create(currentPage, lastPage,
             PagesSettings.Default);
 
-        public static Pages Create(uint currentPage, uint lastPage, PagesSettings settings)
+        public static Pages Create(in int currentPage, in int lastPage, PagesSettings settings)
         {
-            if (currentPage == 0) throw new ArgumentException($"Invalid value: {currentPage}", nameof(currentPage));
+            if (currentPage < 1) throw new ArgumentException("Must be greater than '0'.", nameof(currentPage));
 
             if (lastPage < currentPage)
             {

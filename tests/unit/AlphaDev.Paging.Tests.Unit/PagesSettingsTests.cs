@@ -19,11 +19,33 @@ namespace AlphaDev.Paging.Tests.Unit
         }
 
         [Fact]
-        public void ConstructorThrowsArgumentExceptionWhenItemsPerPageIsZero()
+        public void ConstructorThrowsArgumentExceptionWhenItemsPerPageIsLessThanZero()
         {
             // ReSharper disable once ObjectCreationAsStatement - no need for variable as exception is expected
             Action constructor = () => new PagesSettings(default, default, 0);
-            constructor.Should().Throw<ArgumentException>().WithMessage("Cannot be '0'. (Parameter 'itemsPerPage')");
+            constructor.Should()
+                       .Throw<ArgumentException>()
+                       .WithMessage("Cannot be less than '1'. (Parameter 'itemsPerPage')");
+        }
+
+        [Fact]
+        public void ConstructorThrowsArgumentExceptionWhenNextPageLengthIsLessThanZero()
+        {
+            // ReSharper disable once ObjectCreationAsStatement - no need for variable as exception is expected
+            Action constructor = () => new PagesSettings(default, -1, default);
+            constructor.Should()
+                       .Throw<ArgumentException>()
+                       .WithMessage("Cannot be less than '0'. (Parameter 'nextPagesLength')");
+        }
+
+        [Fact]
+        public void ConstructorThrowsArgumentExceptionWhenPreviousPageLengthIsLessThanZero()
+        {
+            // ReSharper disable once ObjectCreationAsStatement - no need for variable as exception is expected
+            Action constructor = () => new PagesSettings(-1, default, default);
+            constructor.Should()
+                       .Throw<ArgumentException>()
+                       .WithMessage("Cannot be less than '0'. (Parameter 'previousPagesLength')");
         }
 
         [Fact]
@@ -32,8 +54,8 @@ namespace AlphaDev.Paging.Tests.Unit
             PagesSettings.Default.Should()
                          .BeEquivalentTo(new
                          {
-                             PreviousPagesLength = ushort.MaxValue,
-                             NextPagesLength = ushort.MaxValue,
+                             PreviousPagesLength = int.MaxValue,
+                             NextPagesLength = int.MaxValue,
                              ItemsPerPage = 10
                          });
         }
