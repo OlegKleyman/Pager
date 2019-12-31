@@ -17,7 +17,7 @@ namespace AlphaDev.Paging
 
             PreviousPages = (1..Current).ToEnumerable().SkipLast(1).TakeLast(settings.PreviousPagesLength).ToArray();
             NextPages = (Current..lastPage).ToEnumerable().Skip(1).Take(settings.NextPagesLength).ToArray();
-            NextAuxiliaryPage = NextPages.LastOrNone().Filter(u => u + 1 <= Last);
+            NextAuxiliaryPage = NextPages.LastOrNone().Map(i => i + 1).Filter(u => u <= Last);
         }
 
         public Option<int> NextAuxiliaryPage { get; }

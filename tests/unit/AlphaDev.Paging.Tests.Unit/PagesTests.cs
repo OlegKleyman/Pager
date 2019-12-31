@@ -161,7 +161,7 @@ namespace AlphaDev.Paging.Tests.Unit
                  .NextAuxiliaryPage.Should()
                  .HaveSome()
                  .Which.Should()
-                 .Be(8);
+                 .Be(9);
         }
 
         [Fact]
