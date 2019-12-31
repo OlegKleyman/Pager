@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using AlphaDev.Paging.Extensions;
 using FluentAssertions;
 using FluentAssertions.Optional.Extensions;
 using Xunit;
@@ -100,6 +99,18 @@ namespace AlphaDev.Paging.Tests.Unit
                   .Throw<ArgumentsException>()
                   .WithMessage(
                       "Invalid last page: 1 It is less than than the current page: 2 (Parameters 'lastPage', 'currentPage')");
+        }
+
+        [Fact]
+        public void CreateWithSettingsReturnsEmptyNextPagesWhenNextPagesLengthIsZero()
+        {
+            Pages.Create(1, 10, new PagesSettings(default, 0, 10)).NextPages.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CreateWithSettingsReturnsEmptyPreviousPagesWhenPreviousPagesLengthIsZero()
+        {
+            Pages.Create(1, 10, new PagesSettings(0, default, 10)).PreviousPages.Should().BeEmpty();
         }
 
         [Fact]
@@ -204,18 +215,6 @@ namespace AlphaDev.Paging.Tests.Unit
                   .Throw<ArgumentsException>()
                   .WithMessage(
                       "Invalid last page: 1 It is less than than the current page: 2 (Parameters 'lastPage', 'currentPage')");
-        }
-
-        [Fact]
-        public void CreateWithSettingsReturnsEmptyNextPagesWhenNextPagesLengthIsZero()
-        {
-            Pages.Create(1, 10, new PagesSettings(default, 0, 10)).NextPages.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void CreateWithSettingsReturnsEmptyPreviousPagesWhenPreviousPagesLengthIsZero()
-        {
-            Pages.Create(1, 10, new PagesSettings(0, default, 10)).PreviousPages.Should().BeEmpty();
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using AlphaDev.Paging.Extensions;
 using FluentAssertions;
 using Xunit;
 
@@ -25,15 +23,9 @@ namespace AlphaDev.Paging.Tests.Unit
         {
             // ReSharper disable once ObjectCreationAsStatement - no need for variable as exception is expected
             Action constructor = () => new PagesSettings(default, default, 0);
-            constructor.Should().Throw<ArgumentException>().WithMessage("Cannot be less than '1'. (Parameter 'itemsPerPage')");
-        }
-
-        [Fact]
-        public void ConstructorThrowsArgumentExceptionWhenPreviousPageLengthIsLessThanZero()
-        {
-            // ReSharper disable once ObjectCreationAsStatement - no need for variable as exception is expected
-            Action constructor = () => new PagesSettings(-1, default, default);
-            constructor.Should().Throw<ArgumentException>().WithMessage("Cannot be less than '0'. (Parameter 'previousPagesLength')");
+            constructor.Should()
+                       .Throw<ArgumentException>()
+                       .WithMessage("Cannot be less than '1'. (Parameter 'itemsPerPage')");
         }
 
         [Fact]
@@ -41,7 +33,19 @@ namespace AlphaDev.Paging.Tests.Unit
         {
             // ReSharper disable once ObjectCreationAsStatement - no need for variable as exception is expected
             Action constructor = () => new PagesSettings(default, -1, default);
-            constructor.Should().Throw<ArgumentException>().WithMessage("Cannot be less than '0'. (Parameter 'nextPagesLength')");
+            constructor.Should()
+                       .Throw<ArgumentException>()
+                       .WithMessage("Cannot be less than '0'. (Parameter 'nextPagesLength')");
+        }
+
+        [Fact]
+        public void ConstructorThrowsArgumentExceptionWhenPreviousPageLengthIsLessThanZero()
+        {
+            // ReSharper disable once ObjectCreationAsStatement - no need for variable as exception is expected
+            Action constructor = () => new PagesSettings(-1, default, default);
+            constructor.Should()
+                       .Throw<ArgumentException>()
+                       .WithMessage("Cannot be less than '0'. (Parameter 'previousPagesLength')");
         }
 
         [Fact]

@@ -39,7 +39,7 @@ namespace AlphaDev.Paging
 
         public static Pages Create(in int currentPage, in int lastPage, PagesSettings settings)
         {
-            if (currentPage < 1) throw new ArgumentException($"Must be greater than '0'.", nameof(currentPage));
+            if (currentPage < 1) throw new ArgumentException("Must be greater than '0'.", nameof(currentPage));
 
             if (lastPage < currentPage)
             {
