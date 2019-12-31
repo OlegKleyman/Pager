@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AlphaDev.Paging.Extensions;
 using FluentAssertions;
 using FluentAssertions.Optional.Extensions;
 using Xunit;
@@ -78,16 +79,17 @@ namespace AlphaDev.Paging.Tests.Unit
         [Fact]
         public void CreateSetsThePreviousPagesToEmptyArrayWhenCurrentPageIsNone()
         {
-            Pages.Create(1, 20).PreviousPages.Should().BeEmpty();
+            var pages = Pages.Create(1, 20);
+            pages.PreviousPages.Should().BeEmpty();
         }
 
         [Fact]
-        public void CreateThrowsArgumentExceptionWhenCurrentPageIsZero()
+        public void CreateThrowsArgumentExceptionWhenCurrentPageIsLessThanOne()
         {
             Action create = () => Pages.Create(0, 1);
             create.Should()
                   .Throw<ArgumentException>()
-                  .WithMessage("Invalid value: 0 (Parameter 'currentPage')");
+                  .WithMessage("Must be greater than '0'. (Parameter 'currentPage')");
         }
 
         [Fact]
@@ -191,7 +193,7 @@ namespace AlphaDev.Paging.Tests.Unit
             Action create = () => Pages.Create(0, 1, PagesSettings.Default);
             create.Should()
                   .Throw<ArgumentException>()
-                  .WithMessage("Invalid value: 0 (Parameter 'currentPage')");
+                  .WithMessage("Must be greater than '0'. (Parameter 'currentPage')");
         }
 
         [Fact]
@@ -202,6 +204,18 @@ namespace AlphaDev.Paging.Tests.Unit
                   .Throw<ArgumentsException>()
                   .WithMessage(
                       "Invalid last page: 1 It is less than than the current page: 2 (Parameters 'lastPage', 'currentPage')");
+        }
+
+        [Fact]
+        public void CreateWithSettingsReturnsEmptyNextPagesWhenNextPagesLengthIsZero()
+        {
+            Pages.Create(1, 10, new PagesSettings(default, 0, 10)).NextPages.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CreateWithSettingsReturnsEmptyPreviousPagesWhenPreviousPagesLengthIsZero()
+        {
+            Pages.Create(1, 10, new PagesSettings(0, default, 10)).PreviousPages.Should().BeEmpty();
         }
     }
 }

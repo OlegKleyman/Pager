@@ -7,7 +7,7 @@ namespace AlphaDev.Paging.Extensions
 {
     public static class EnumerableExtensions
     {
-        public static Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, int currentPage,
+        public static Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, in int currentPage,
             Func<Task<int>> totalItems) => ToPagerAsync(items, currentPage, totalItems,
             PagesSettings.Default);
 
@@ -17,7 +17,7 @@ namespace AlphaDev.Paging.Extensions
             var pageItems = items.ToArray();
 
             var totalPages = (int) Math.Ceiling((decimal) await totalItems() / settings.ItemsPerPage);
-            if (totalPages != currentPage && pageItems.LongLength < settings.ItemsPerPage)
+            if (totalPages != currentPage && pageItems.Length < settings.ItemsPerPage)
             {
                 throw new InvalidOperationException(
                     $"Invalid amount of items. Expected {settings.ItemsPerPage}, but was {pageItems.Length}. Only the last page may contain less than {settings.ItemsPerPage} items.");
@@ -27,7 +27,7 @@ namespace AlphaDev.Paging.Extensions
             return new Pager<T>(pageItems, pages);
         }
 
-        public static Pager<T> ToPager<T>(this IEnumerable<T> items, int currentPage,
+        public static Pager<T> ToPager<T>(this IEnumerable<T> items, in int currentPage,
             Func<int> totalItems)
         {
             return ToPagerAsync(items, currentPage, () => Task.FromResult(totalItems()))
@@ -35,7 +35,7 @@ namespace AlphaDev.Paging.Extensions
                    .GetResult();
         }
 
-        public static Pager<T> ToPager<T>(this IEnumerable<T> items, int currentPage,
+        public static Pager<T> ToPager<T>(this IEnumerable<T> items, in int currentPage,
             Func<int> totalItems, PagesSettings settings)
         {
             return ToPagerAsync(items, currentPage, () => Task.FromResult(totalItems()), settings)

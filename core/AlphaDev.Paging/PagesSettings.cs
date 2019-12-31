@@ -9,21 +9,27 @@ namespace AlphaDev.Paging
         static PagesSettings()
         {
             Settings = new Lazy<PagesSettings>(() =>
-                new PagesSettings(ushort.MaxValue, ushort.MaxValue, 10));
+                new PagesSettings(int.MaxValue, int.MaxValue, 10));
         }
 
-        public PagesSettings(ushort previousPagesLength, ushort nextPagesLength, int itemsPerPage)
+        public PagesSettings(in int previousPagesLength, in int nextPagesLength, in int itemsPerPage)
         {
-            if (itemsPerPage == 0) throw new ArgumentException("Cannot be '0'.", nameof(itemsPerPage));
+            if (previousPagesLength < 0)
+            {
+                throw new ArgumentException("Cannot be less than '0'.", nameof(previousPagesLength));
+            }
+
+            if (nextPagesLength < 0) throw new ArgumentException("Cannot be less than '0'.", nameof(nextPagesLength));
+            if (itemsPerPage < 1) throw new ArgumentException("Cannot be less than '1'.", nameof(itemsPerPage));
 
             PreviousPagesLength = previousPagesLength;
             NextPagesLength = nextPagesLength;
             ItemsPerPage = itemsPerPage;
         }
 
-        public ushort PreviousPagesLength { get; }
+        public int PreviousPagesLength { get; }
 
-        public ushort NextPagesLength { get; }
+        public int NextPagesLength { get; }
 
         public int ItemsPerPage { get; }
 
