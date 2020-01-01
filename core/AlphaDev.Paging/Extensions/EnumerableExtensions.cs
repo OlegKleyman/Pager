@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AlphaDev.Paging.Extensions
 {
     public static class EnumerableExtensions
     {
-        public static Pager<T> ToPager<T>(this IEnumerable<T> items, in int currentPage,
-            int totalItems) => ToPager(items, currentPage, totalItems,
-            PagesSettings.Default);
+        public static Pager<T> ToPager<T>(this IEnumerable<T> items, in int currentPage, int totalItems) =>
+            ToPager(items, currentPage, totalItems, PagesSettings.Default);
 
         public static Pager<T> ToPager<T>(this IEnumerable<T> items, int currentPage,
             int totalItems, PagesSettings settings)
