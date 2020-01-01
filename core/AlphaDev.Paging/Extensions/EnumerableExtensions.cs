@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AlphaDev.Paging.Extensions
 {
     public static class EnumerableExtensions
     {
-        public static Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, in int currentPage,
-            Func<Task<int>> totalItems) => ToPagerAsync(items, currentPage, totalItems,
-            PagesSettings.Default);
+        public static Pager<T> ToPager<T>(this IEnumerable<T> items, in int currentPage, int totalItems) =>
+            ToPager(items, currentPage, totalItems, PagesSettings.Default);
 
-        public static async Task<Pager<T>> ToPagerAsync<T>(this IEnumerable<T> items, int currentPage,
-            Func<Task<int>> totalItems, PagesSettings settings)
+        public static Pager<T> ToPager<T>(this IEnumerable<T> items, int currentPage,
+            int totalItems, PagesSettings settings)
         {
             var pageItems = items.ToArray();
 
-            var totalPages = (int) Math.Ceiling((decimal) await totalItems() / settings.ItemsPerPage);
+            var totalPages = (int) Math.Ceiling((decimal) totalItems / settings.ItemsPerPage);
             if (totalPages != currentPage && pageItems.Length < settings.ItemsPerPage)
             {
                 throw new InvalidOperationException(
@@ -25,22 +23,6 @@ namespace AlphaDev.Paging.Extensions
 
             var pages = Pages.Create(currentPage, totalPages, settings);
             return new Pager<T>(pageItems, pages);
-        }
-
-        public static Pager<T> ToPager<T>(this IEnumerable<T> items, in int currentPage,
-            Func<int> totalItems)
-        {
-            return ToPagerAsync(items, currentPage, () => Task.FromResult(totalItems()))
-                   .GetAwaiter()
-                   .GetResult();
-        }
-
-        public static Pager<T> ToPager<T>(this IEnumerable<T> items, in int currentPage,
-            Func<int> totalItems, PagesSettings settings)
-        {
-            return ToPagerAsync(items, currentPage, () => Task.FromResult(totalItems()), settings)
-                   .GetAwaiter()
-                   .GetResult();
         }
     }
 }
